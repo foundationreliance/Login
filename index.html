@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Auth Flow</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- ✅ Load Firebase from CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
     
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
@@ -160,8 +164,8 @@
     </div>
 
     <!-- Firebase Authentication and Login Handling -->
-  <script>
-    // Initialize Firebase
+ <script>
+    // ✅ Initialize Firebase using a CDN
     const firebaseConfig = {
         apiKey: "AIzaSyDN92MjC4k2pzBD8wgc3ADy8qQvqKElUyM",
         authDomain: "login-1b560.firebaseapp.com",
@@ -175,7 +179,6 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // 🔹 Ensure userData is declared globally at the top
     let userData = {
         email: '',
         password: '',
@@ -239,6 +242,7 @@
         }
     }
 </script>
+
 
 </body>
 </html>
