@@ -1,7 +1,4 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
-// Firebase configuration
+// Initialize Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyDN92MjC4k2pzBD8wgc3ADy8qQvqKElUyM",
     authDomain: "login-1b560.firebaseapp.com",
@@ -13,13 +10,13 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
 // Function to log in a user and send data to the server
 const loginUser = async (email, password, phone) => {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
         // Prepare user data
@@ -50,4 +47,4 @@ const loginUser = async (email, password, phone) => {
 };
 
 // Export function
-export { loginUser };
+window.loginUser = loginUser;
